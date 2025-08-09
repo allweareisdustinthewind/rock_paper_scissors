@@ -1,7 +1,8 @@
-const maxWins = 5; // Count of wins
-let actualRound = 1; // Number of actual round
-let humanScore = 0;
-let computerScore = 0;
+const maxWins = 5;     // Count of wins
+let actualRound = 1;   // Number of actual round
+let humanScore = 0;    // Count of human's points
+let computerScore = 0; // Count of computer's points
+let canPlay = true;    // When false, then the game is finished
 
 //
 // Computer makes your's choice
@@ -28,17 +29,22 @@ function makeStringCapital (str) {
    return str.charAt (0).toUpperCase () + str.slice (1);
 }
 
+//
+// If true then human has won actual round
+//
 function isHumanWins (humanChoice, computerChoice) {
    return (humanChoice === 'rock' && computerChoice === 'scissors') ||
           (humanChoice === 'paper' && computerChoice === 'rock') ||
           (humanChoice === 'scissors' && computerChoice === 'paper');
 }
 
+//
+// Make update in representation of actual score
+//
 function updateScore () {
    document.querySelector ("#score_human").textContent = `0${humanScore}`;
    document.querySelector ("#score_computer").textContent = `0${computerScore}`;
 
-   let canPlay = true;
    if (humanScore === maxWins) {
       const res = document.querySelector ('#result');
       res.textContent = "Human wins!";
@@ -50,36 +56,36 @@ function updateScore () {
       res.classList.add ('computer_wins');
       canPlay = false;
    }
-
-   if (!canPlay) {
-      const areas = document.querySelectorAll ("area");
-      for (let ar of areas)
-         ar.removeEventListener ('click', processHumanChoice);
-   }
-
-   return canPlay;
 }
 
-
+//
+// Callback to call by click on paper, rock or scissor image
+//
 function processHumanChoice (ev) {
    ev.preventDefault ();
+
+   if (!canPlay)
+      return;
 
    const humanChoice = ev.currentTarget.alt;
    const computerChoice = getComputerChoice ();
 
    const log = document.querySelector ('#log_data');
 
+   // Add node with human's choice
    const elemList = document.createElement ('ul');
    const elemHuman = document.createElement ('li');
    elemHuman.textContent = `Human's choice: ${makeStringCapital (humanChoice)}`;
    elemHuman.classList.add ('li_human');
    elemList.appendChild (elemHuman);
    
+   // Add node with computer's choice
    const elemComputer = document.createElement ('li');
    elemComputer.textContent = `Computer's choice: ${makeStringCapital (computerChoice)}`;
    elemComputer.classList.add ('li_computer');
    elemList.appendChild (elemComputer);
 
+   // Get the winner in actual round and append node with winner to game's log
    const elem = document.createElement ('li');
    if (humanChoice === computerChoice) {
       elem.textContent = 'Both choices are equal, tie!'
@@ -88,12 +94,12 @@ function processHumanChoice (ev) {
    else {
       if (isHumanWins (humanChoice, computerChoice)) {
          elem.textContent = 'Human wins!';
-         elem.classList.add ('li_human');
+         elem.classList.add ('li_human_wins');
          ++humanScore;
       }
       else {
          elem.textContent = 'Computer wins!';
-         elem.classList.add ('li_computer');
+         elem.classList.add ('li_computer_wins');
          ++computerScore;
       }
    }
@@ -102,10 +108,15 @@ function processHumanChoice (ev) {
 
    log.appendChild (elemList);
 
-   if (updateScore ())
+   updateScore ();
+
+   if (canPlay)
       startNewRound ();
 }
 
+//
+// Appen node woth next round to game's log
+//
 function startNewRound () {
    const log = document.querySelector ('#log_data');
    
@@ -115,6 +126,9 @@ function startNewRound () {
    log.appendChild (elemRound);
 }
 
+//
+// Main function to start the game
+//
 function startGame () {
    const areas = document.querySelectorAll ("area");
    for (let ar of areas)
