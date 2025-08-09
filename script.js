@@ -1,5 +1,7 @@
-// Count of wins
-const maxWins = 5;
+const maxWins = 5; // Count of wins
+let actualRound = 1; // Number of actual round
+let humanScore = 0;
+let computerScore = 0;
 
 //
 // Computer makes your's choice
@@ -19,88 +21,106 @@ function getComputerChoice () {
    }
 }
 
-// //
-// // Human makes your's choice
-// //
-// function getHumanChoice (round) {
-//    for (;;) {
-//       let choice = prompt (`Round ${round} of ${maxRounds}\nMake your choice:`).trim ().toLowerCase ();
-//       if (choice === 'rock' || choice === 'paper' || choice === 'scissors')
-//          return choice;
+//
+// Capitalize first letter in string
+//
+function makeStringCapital (str) {
+   return str.charAt (0).toUpperCase () + str.slice (1);
+}
 
-//       alert (`Choice '${choice}' is inappropriate. Please enter 'rock', 'paper' or 'scissors'`);
-//    }
-// }
+function isHumanWins (humanChoice, computerChoice) {
+   return (humanChoice === 'rock' && computerChoice === 'scissors') ||
+          (humanChoice === 'paper' && computerChoice === 'rock') ||
+          (humanChoice === 'scissors' && computerChoice === 'paper');
+}
 
+function updateScore () {
+   document.querySelector ("#score_human").textContent = `0${humanScore}`;
+   document.querySelector ("#score_computer").textContent = `0${computerScore}`;
 
-// //
-// // Capitalize first letter in string
-// //
-// function makeStringCapital (str) {
-//    return str.charAt (0).toUpperCase () + str.slice (1);
-// }
-
-// Play one game round
-function playRound (humanChoice, computerChoice) {
-   
-   // Check equality of choices
-   if (humanChoice === computerChoice) {
-      console.log ('Both choices are equal, please try again');
-      return;
+   let canPlay = true;
+   if (humanScore === maxWins) {
+      const res = document.querySelector ('#result');
+      res.textContent = "Human wins!";
+      res.classList.add ('human_wins');
+      canPlay = false;
+   } else if (computerScore === maxWins) {
+      const res = document.querySelector ('#result');
+      res.textContent = "Computer wins!";
+      res.classList.add ('computer_wins');
+      canPlay = false;
    }
 
-   // Formulate criterion of human's winning 
-   let humanWin = (humanChoice === 'rock' && computerChoice === 'scissors') ||
-                  (humanChoice === 'paper' && computerChoice === 'rock') ||
-                  (humanChoice === 'scissors' && computerChoice === 'paper');
+   if (!canPlay) {
+      const areas = document.querySelectorAll ("area");
+      for (let ar of areas)
+         ar.removeEventListener ('click', processHumanChoice);
+   }
 
-   // Show result of current round
-   if (humanWin) {
-      console.log (`You win! ${makeStringCapital (humanChoice)} beats ${computerChoice}.`);
-      ++humanScore;
+   return canPlay;
+}
+
+
+function processHumanChoice (ev) {
+   ev.preventDefault ();
+
+   const humanChoice = ev.currentTarget.alt;
+   const computerChoice = getComputerChoice ();
+
+   const log = document.querySelector ('#log_data');
+
+   const elemList = document.createElement ('ul');
+   const elemHuman = document.createElement ('li');
+   elemHuman.textContent = `Human's choice: ${makeStringCapital (humanChoice)}`;
+   elemHuman.classList.add ('li_human');
+   elemList.appendChild (elemHuman);
+   
+   const elemComputer = document.createElement ('li');
+   elemComputer.textContent = `Computer's choice: ${makeStringCapital (computerChoice)}`;
+   elemComputer.classList.add ('li_computer');
+   elemList.appendChild (elemComputer);
+
+   const elem = document.createElement ('li');
+   if (humanChoice === computerChoice) {
+      elem.textContent = 'Both choices are equal, tie!'
+      elem.classList.add ('li_tie');
    }
    else {
-      console.log (`You lose! ${makeStringCapital (computerChoice)} beats ${humanChoice}.`);
-      ++computerScore;
+      if (isHumanWins (humanChoice, computerChoice)) {
+         elem.textContent = 'Human wins!';
+         elem.classList.add ('li_human');
+         ++humanScore;
+      }
+      else {
+         elem.textContent = 'Computer wins!';
+         elem.classList.add ('li_computer');
+         ++computerScore;
+      }
    }
 
-   console.log (`Actual score "computer vs. human" is ${computerScore} : ${humanScore}`);
+   elemList.appendChild (elem);
+
+   log.appendChild (elemList);
+
+   if (updateScore ())
+      startNewRound ();
 }
 
-//
-// Main function of the game
-//
-function playGame () {
-   // Initial score is 0:0
-   let humanScore = 0;
-   let computerScore = 0;
-
-   // Play N rounds
-   for (let i = 0; i < maxRounds; ++i) {
-      console.log (`---=== Round ${i + 1} ===---`);
-      playRound (getHumanChoice (i + 1), getComputerChoice ());
-   }
-
-   let result = `The score is ${computerScore} : ${humanScore}. `;
-
-    // Show results of game
-    if (computerScore > humanScore)
-      result = result.concat ("Computer wins!");
-   else if (humanScore > computerScore)
-      result = result.concat ("Human wins!");
-   else
-      result = result.concat ("Tie!");
-
-   console.log (result);
+function startNewRound () {
+   const log = document.querySelector ('#log_data');
+   
+   const elemRound = document.createElement ('p');
+   elemRound.textContent = `Round ${actualRound++} beginns`;
+   elemRound.classList.add ("round_text");
+   log.appendChild (elemRound);
 }
-
-//playGame ();
 
 function startGame () {
-   // const img = document.querySelector ("img");
-   // console.log (img);
+   const areas = document.querySelectorAll ("area");
+   for (let ar of areas)
+      ar.addEventListener ('click', processHumanChoice);
 
-   console.log ("I am here");
+   startNewRound ();
 }
 
 startGame ();

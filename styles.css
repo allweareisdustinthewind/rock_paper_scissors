@@ -1,0 +1,113 @@
+.flex_container {
+   display: flex
+}
+
+.image_container {
+   position: relative;
+}
+
+.computer_wins, 
+.human_wins {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   font-size: 42px;
+   font-weight: 900;
+   font-style: italic;
+}
+
+.computer_wins {
+   color: red;
+}
+
+.human_wins {
+   color: green;
+}
+
+.game_log_container {
+   display: flex;
+   flex-direction: column;
+   flex: 1;
+   margin-left: 100px;
+   margin-top: 20px;
+   padding: 0;
+}
+
+.log_header {
+   font-size: 28px;
+   font-weight: 900;
+   margin-left: 30px;
+   margin-bottom: 25px;
+   color: gray;
+}
+
+.round_text {
+   border: 1px solid brown;
+   color: brown;
+   font-weight: 700;
+   max-width: 180px;
+   padding-left: 20px;
+   margin: 0;
+}
+
+.li_human {
+   color: green;
+}
+
+.li_computer {
+   color: red;
+}
+
+.li_tie {
+   color: rgb(82, 82, 82);
+}
+
+.li_computer_wins {
+   color: white;
+   background-color: red;
+   font-weight: 700;
+}
+
+.li_human_wins {
+   color: white;
+   background-color: green;
+   font-weight: 700;
+}
+
+.score_container {
+   display: flex;
+   flex-direction: column;
+   flex: 1;
+   max-width: 120px;
+   align-items: center;
+   margin-top: 20px;
+   padding: 0;
+}
+
+.score_container > div {
+   font-size: 28px;
+   font-weight: 900;
+}
+
+.score {
+   display: flex;
+}
+
+.score_header {
+   margin-bottom: 20px;
+   color: blueviolet;
+}
+
+.score_divider {
+   margin-left: 10px;
+   margin-right: 10px; 
+}
+
+#score_human {
+   color: green;
+}
+
+#score_computer {
+   color: red;
+}

@@ -4,9 +4,33 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Rock, paper, scissors</title>
+   <link rel="icon" type="image/vnd.icon" href="favicon.ico">
+   <link rel="stylesheet" href="styles.css">
+   <script defer src="script.js"></script>
 </head>
 <body>
-   <script src="script.js">
-   </script>
+   <div class="flex_container">
+      <div class="image_container">
+         <img src="rps.png" width="764" height="692" alt="Rock, paper and scissors" usemap="#rps_map">
+         <map name="rps_map">
+            <area shape="poly" coords="86,416,9,424,7,580,72,648,215,641,234,505,200,372" alt="rock" href="">
+            <area shape="poly" coords="445,0,269,15,302,271,490,271,496,190" alt="paper" href="">
+            <area shape="poly" coords="656,440,596,337,560,353,553,399,625,504,581,687,728,687,690,474,763,406,763,355,724,355" alt="scissors" href="">
+         </map>
+         <div id="result"></div>
+      </div>
+      <div class="score_container">
+         <div class="score_header">Score</div>
+         <div class="score">
+            <div id="score_human">00</div>
+            <div class="score_divider">:</div>
+            <div id="score_computer">00</div>
+         </div>
+      </div>
+      <div class="game_log_container">
+         <div class="log_header">Game's log</div>
+         <div id="log_data"></div>
+      </div>
+   </div>
 </body>
 </html>
